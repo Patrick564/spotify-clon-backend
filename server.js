@@ -13,9 +13,14 @@ const authBase64 = Buffer.from(
 ).toString('base64')
 
 const PORT = process.env.PORT || 3000
+// const HOST = process.env.HOST || 'localhost'
 
 
 fastify.register(require('@fastify/cors'))
+
+fastify.get('/', async (request, reply) => {
+  reply.send({ hello: 'world' })
+})
 
 fastify.get('/api/login', async (request, reply) => {
   const scope = process.env.SPOTIFY_SCOPE
