@@ -13,7 +13,7 @@ const authBase64 = Buffer.from(
 ).toString('base64')
 
 const PORT = process.env.PORT || 3000
-const HOST = process.env.HOST_PROD || 'localhost'
+const HOST = process.env.HOST_PROD || '127.0.0.1'
 
 
 fastify.register(require('@fastify/cors'))
@@ -22,38 +22,38 @@ fastify.get('/', async (request, reply) => {
   reply.send({ hello: 'world' })
 })
 
-fastify.get('/api/login', async (request, reply) => {
-  const scope = process.env.SPOTIFY_SCOPE
-  const clientId = process.env.SPOTIFY_CLIENT_ID
-  const responseType = 'code'
-  const state =  crypto.randomBytes(16).toString('hex')
+// fastify.get('/api/login', async (request, reply) => {
+//   const scope = process.env.SPOTIFY_SCOPE
+//   const clientId = process.env.SPOTIFY_CLIENT_ID
+//   const responseType = 'code'
+//   const state =  crypto.randomBytes(16).toString('hex')
 
-  reply.redirect(
-    `https://accounts.spotify.com/authorize?response_type=${responseType}&state=${state}&client_id=${clientId}&scope=${scope}&redirect_uri=${redirectUri}&show_dialog=true`
-  )
-})
+//   reply.redirect(
+//     `https://accounts.spotify.com/authorize?response_type=${responseType}&state=${state}&client_id=${clientId}&scope=${scope}&redirect_uri=${redirectUri}&show_dialog=true`
+//   )
+// })
 
-fastify.get('/api/auth', async (request, reply) => {
-  const code = request.query.code || null
-  const state = request.query.state || null
+// fastify.get('/api/auth', async (request, reply) => {
+//   const code = request.query.code || null
+//   const state = request.query.state || null
 
-  const grantType = 'authorization_code'
+//   const grantType = 'authorization_code'
 
-  const authResponse = await fetch('https://accounts.spotify.com/api/token', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Basic ${authBase64}`,
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: `grant_type=${grantType}&code=${code}&redirect_uri=${redirectUri}`,
-  })
+//   const authResponse = await fetch('https://accounts.spotify.com/api/token', {
+//     method: 'POST',
+//     headers: {
+//       'Authorization': `Basic ${authBase64}`,
+//       'Content-Type': 'application/x-www-form-urlencoded',
+//     },
+//     body: `grant_type=${grantType}&code=${code}&redirect_uri=${redirectUri}`,
+//   })
 
-  const data = await authResponse.json()
+//   const data = await authResponse.json()
 
-  reply.redirect(
-    `${clientRedirectUrl}?token=${data.access_token}&refresh_token=${data.refresh_token}`
-  )
-})
+//   reply.redirect(
+//     `${clientRedirectUrl}?token=${data.access_token}&refresh_token=${data.refresh_token}`
+//   )
+// })
 
 // fastify.post('/api/refresh', async (request, reply) => {
 //   const fetchSpotifyAuthR = await fetch(spotifyUrlAuth, {
@@ -70,7 +70,7 @@ fastify.get('/api/auth', async (request, reply) => {
 
 const start = async () => {
   try {
-    await fastify.listen(PORT, HOST)
+    await fastify.listen({ port: PORT, host: HOST})
   } catch (error) {
     fastify.log.error(error)
     process.exit(1)
