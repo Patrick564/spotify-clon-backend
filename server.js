@@ -13,7 +13,7 @@ const authBase64 = Buffer.from(
 ).toString('base64')
 
 const PORT = process.env.PORT || 3000
-// const HOST = process.env.HOST || 'localhost'
+const HOST = process.env.HOST || 'localhost'
 
 
 fastify.register(require('@fastify/cors'))
@@ -70,7 +70,7 @@ fastify.get('/api/auth', async (request, reply) => {
 
 const start = async () => {
   try {
-    await fastify.listen({ port: PORT })
+    await fastify.listen(PORT, HOST)
   } catch (error) {
     fastify.log.error(error)
     process.exit(1)
