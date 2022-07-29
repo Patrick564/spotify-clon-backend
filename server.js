@@ -13,7 +13,7 @@ const authBase64 = Buffer.from(
 ).toString('base64')
 
 const PORT = process.env.PORT || 3000
-const HOST = process.env.HOST || 'localhost'
+const HOST = process.env.HOST_PROD || 'localhost'
 
 
 fastify.register(require('@fastify/cors'))
